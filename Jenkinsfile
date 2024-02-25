@@ -20,7 +20,7 @@ pipeline {
       }
     }
     stage('Static Code Analysis') {
-      environment {
+      environment { 
         SONAR_URL = "http://localhost:9002"
       }
       steps {
@@ -51,7 +51,7 @@ pipeline {
             GIT_USER_NAME = "venugopalreddy1322"
         }
         steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_AUTH')]) {
+            withCredentials([string(credentialsId: 'github_pwd', variable: 'GITHUB_AUTH')]) {
                 sh '''
                     git config user.email "venugopalreddy1322@gmail.com"
                     git config user.name "Venugopal Reddy N"
