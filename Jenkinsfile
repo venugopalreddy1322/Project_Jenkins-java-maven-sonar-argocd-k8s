@@ -21,12 +21,12 @@ pipeline {
     }
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://localhost:9099"
+        SONAR_URL = "http://localhost:9009"
       }
       steps {
         
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_LOCAL')]) {
-          sh 'mvn sonar:sonar -Dsonar.login=${SONAR_LOCAL} -Dsonar.host.url=${SONAR_URL}'
+          sh 'mvn sonar:sonar -Dsonar.login=$SONAR_LOCAL -Dsonar.host.url=${SONAR_URL}'
         }
       }
     }
