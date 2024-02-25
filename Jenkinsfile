@@ -1,0 +1,65 @@
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        sh 'echo Checkout passed'
+        // This case Jenkins fetches from Git as we mentioned Jenkinsfile location to this repository.
+        // To get the Jenkinsfile Jenkins clones the repository. So no need to fetch again.
+        //git branch: 'main', url: 'https://github.com/venugopalreddy1322/Project_Jenkins-java-maven-sonar-argocd-k8s'
+      }
+    }
+    stage('Build and Test') {
+      steps {
+        
+        // build the project and create a JAR file
+        sh 'mvn clean package'
+      }
+    }
+    stage('Static Code Analysis') {
+      environment {
+        SONAR_URL = "http://localhost:9099"
+      }
+      steps {
+        
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_LOCAL')]) {
+          sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+        }
+      }
+    }
+    stage('Build and Push Docker Image') {
+      environment {
+        DOCKER_IMAGE = "venu1322/ultimate-cicd:${BUILD_NUMBER}"
+        REGISTRY_CREDENTIALS = credentials('dockerhub_pwd')
+      }
+      steps {
+        script {
+            sh 'docker build -t ${DOCKER_IMAGE} .'
+            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            withDockerRegistry(credentialsId: 'dockerhub_pwd', url: ' https://index.docker.io/v1/') {
+                dockerImage.push()
+            }
+        }
+      }
+    }
+    stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "Project_Jenkins-java-maven-sonar-argocd-k8s"
+            GIT_USER_NAME = "venugopalreddy1322"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_AUTH')]) {
+                sh '''
+                    git config user.email "venugopalreddy1322@gmail.com"
+                    git config user.name "Venugopal Reddy N"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" Project_Jenkins-java-maven-sonar-argocd-k8s/k8manifest.yaml
+                    git add Project_Jenkins-java-maven-sonar-argocd-k8s/k8manifest.yaml
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push https://${GITHUB_AUTH}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+            }
+        }
+    }
+  }
+}
