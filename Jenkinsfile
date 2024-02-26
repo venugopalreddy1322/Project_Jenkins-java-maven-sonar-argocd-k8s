@@ -43,6 +43,7 @@ pipeline {
             // Dynamically get the current workspace directory
             def workspaceDir = pwd()
             sh 'pwd'
+            sh 'ls -l /var/lib/jenkins/workspace/DevOps_CICD/target/spring-boot-web.jar'
             sh 'docker build -t ${DOCKER_IMAGE} .'
             def dockerImage = docker.image("${DOCKER_IMAGE}")
             withDockerRegistry(credentialsId: 'dockerhub_pwd', url: ' https://index.docker.io/v1/') {
