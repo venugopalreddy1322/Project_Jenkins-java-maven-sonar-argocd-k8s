@@ -17,6 +17,8 @@ pipeline {
         
         // build the project and create a JAR file
         sh 'mvn clean package'
+        sh 'pwd'
+        sh 'ls -ltr'
       }
     }
     stage('Static Code Analysis') {
