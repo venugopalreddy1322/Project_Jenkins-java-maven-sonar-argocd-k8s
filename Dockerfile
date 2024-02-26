@@ -1,6 +1,6 @@
 # Used lightweight image required to run application.
 FROM adoptopenjdk/openjdk11:alpine-jre
-WORKDIR /opt/app
+WORKDIR /app
 # Simply the artifact path
 COPY target/spring-boot-web.jar app.jar
 EXPOSE 8080
