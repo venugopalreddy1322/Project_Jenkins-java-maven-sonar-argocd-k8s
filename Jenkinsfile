@@ -21,7 +21,7 @@ pipeline {
     }
     stage('Static Code Analysis') {
       environment { 
-        SONAR_URL = "http://127.0.0.1:9002"
+        SONAR_URL = "http://192.168.56.13:9000/"
       }
       steps {
         
@@ -47,7 +47,7 @@ pipeline {
     }
     stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "Project_Jenkins-java-maven-sonar-argocd-k8s"
+            GIT_REPO_NAME = "Project_Jenkins-java-maven-sonar-argocd-k8s-final-artifact"
             GIT_USER_NAME = "venugopalreddy1322"
         }
         steps {
