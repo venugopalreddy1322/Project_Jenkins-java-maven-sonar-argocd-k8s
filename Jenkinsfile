@@ -17,8 +17,6 @@ pipeline {
         
         // build the project and create a JAR file
         sh 'mvn clean package'
-        sh 'pwd'
-        sh 'ls -ltr'
       }
     }
     stage('Static Code Analysis') {
@@ -35,17 +33,13 @@ pipeline {
     stage('Build and Push Docker Image') {
       environment {
         DOCKER_IMAGE = "venu1322/ultimate-cicd:${BUILD_NUMBER}"
-        REGISTRY_CREDENTIALS = credentials('dockerhub_pwd')
+        //REGISTRY_CREDENTIALS = credentials('dockerhub_pwd')
       }
       steps {
         script {
-            sh 'pwd'
-            // Dynamically get the current workspace directory
-            def workspaceDir = pwd()
-            sh 'pwd'
-            sh 'ls -l /var/lib/jenkins/workspace/DevOps_CICD/target/spring-boot-web.jar'
-            sh 'docker build -t ${DOCKER_IMAGE} .'
-            def dockerImage = docker.image("${DOCKER_IMAGE}")
+            dockerImage = docker.build("${DOCKER_IMAGE}")
+            //sh 'docker build -t ${DOCKER_IMAGE} .'
+            //def dockerImage = docker.image("${DOCKER_IMAGE}")
             withDockerRegistry(credentialsId: 'dockerhub_pwd', url: ' https://index.docker.io/v1/') {
                 dockerImage.push()
             }
