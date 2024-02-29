@@ -6,11 +6,11 @@ pipeline {
 
     }
     stages {
-        stage('clean workspace') {
+        /*stage('clean workspace') {
             steps {
                 cleanWs()
             }
-        }
+        }*/
         stage('Build docker image from Dockerfile') {
             steps {
                 script {
