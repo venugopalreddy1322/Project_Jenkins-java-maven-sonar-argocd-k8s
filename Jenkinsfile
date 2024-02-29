@@ -14,6 +14,8 @@ pipeline {
         stage('Static code analysis:SonarQube') {
             steps {
                 script {
+                    sh 'pwd'
+                    sh 'ls -ltr'
                     withSonarQubeEnv(credentialsId: 'sonarqube') {
                     sh 'mvn sonar:sonar'
                     }
