@@ -14,8 +14,9 @@ pipeline {
         stage('Static code analysis:SonarQube') {
             steps {
                 script {
-                    withSonarQubeEnv(credentialsId: 'sonarqube')
+                    withSonarQubeEnv(credentialsId: 'sonarqube') {
                     sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
@@ -57,6 +58,5 @@ pipeline {
                 }
             }
         }
-
-}
+    }
 }
