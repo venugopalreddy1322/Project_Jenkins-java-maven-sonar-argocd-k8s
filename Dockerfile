@@ -6,7 +6,7 @@ COPY .mvn/ .mvn
 COPY mvnw .
 COPY pom.xml .
 
-RUN ./mvnw clean install -DskipTests
+RUN mvn clean install -DskipTests
 
 # Clean up Maven dependencies
 RUN rm -rf ~/.m2
