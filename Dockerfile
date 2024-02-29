@@ -1,6 +1,6 @@
 # Build Stage
 FROM adoptopenjdk/openjdk11:alpine AS builder
-WORKDIR /workspace/app
+WORKDIR /app
 
 COPY .mvn/ .mvn
 COPY mvnw .
@@ -22,7 +22,7 @@ WORKDIR /app
 #USER myuser
 
 # Copy necessary artifacts from the builder stage
-COPY --from=builder /workspace/app/target/*.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
