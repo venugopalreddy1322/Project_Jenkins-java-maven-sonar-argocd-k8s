@@ -1,9 +1,8 @@
 # Build Stage
-FROM adoptopenjdk/openjdk11:alpine AS builder
+#FROM adoptopenjdk/openjdk11:alpine AS builder
+FROM maven:3.8.3-openjdk-11 AS build
 WORKDIR /app
 
-COPY .mvn/ .mvn
-COPY mvnw .
 COPY pom.xml .
 
 RUN mvn clean install -DskipTests
